@@ -21,14 +21,24 @@ class GithubSample:
         user_url = 'https://api.github.com/users/%s?access_token=%s' % (userid, self.personal_access_token)
         return requests.get(user_url).json()
 
-    def query_user_repos(self, userid):
-        repos_url = 'https://api.github.com/users/%s/repos?type=fork&access_token=%s' % (
-            userid, self.personal_access_token)
+    def query_user_repos(self, userid, page=1, per_page=20):
+        repos_url = 'https://api.github.com/users/%s/repos?page=%d&per_page=%d&access_token=%s' % (
+            userid, page, per_page, self.personal_access_token)
         return requests.get(repos_url).json()
 
     def query_repo_info(self, userid, repo):
         repo_url = 'https://api.github.com/repos/%s/%s' % (userid, repo)
         return requests.get(repo_url).json()
+
+    def star_repo(self, owner, repo):
+        star_repo_url = 'https://api.github.com/user/starred/%s/%s?access_token=%s' % (
+            owner, repo, self.personal_access_token)
+        return requests.put(star_repo_url).status_code
+
+    def remove_repo(self, userid, repo):
+        remove_repo_url = 'https://api.github.com/repos/%s/%s?access_token=%s' % (
+            userid, repo, self.personal_access_token)
+        return requests.delete(remove_repo_url).status_code
 
 
 def pretty_print(data):
