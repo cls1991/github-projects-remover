@@ -10,6 +10,7 @@ import requests
 
 
 class GithubSample:
+
     def __init__(self, personal_access_token):
         self.personal_access_token = personal_access_token
 
@@ -22,7 +23,10 @@ class GithubSample:
 
     def query_user_info(self, userid):
         user_url = 'https://api.github.com/users/%s?access_token=%s' % (userid, self.personal_access_token)
-        return requests.get(user_url).json()
+        resp = requests.get(user_url)
+        if resp.status_code != 200:
+            return {}
+        return resp.json()
 
     def query_user_repos(self, userid, page=1, per_page=20):
         repos_url = 'https://api.github.com/users/%s/repos?page=%d&per_page=%d&access_token=%s' % (
